@@ -1,0 +1,36 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewBag.Title · Taller Semana 6</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;800;900&family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link href="@Url.Content("~/Content/pokemon.css")" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    <main class="contenedor">
+        <div class="consola">
+            <header class="consola-top">
+                <div class="gema" aria-hidden="true"></div>
+                <div class="luces" aria-hidden="true">
+                    <span class="luz r"></span><span class="luz a"></span><span class="luz v"></span>
+                </div>
+                <a href="@Url.Action("Index", "Pokemon")" class="consola-titulo">
+                    Taller Semana 6
+                    <small>ASP.NET Framework · PokéAPI</small>
+                </a>
+            </header>
+
+            <div class="consola-cuerpo">
+                @RenderBody()
+            </div>
+
+            <div class="consola-pie">
+                Taller Semana 6 - Luis Fernando Aguas Bucheli - Profe Geek EC
+            </div>
+        </div>
+    </main>
+</body>
+</html>

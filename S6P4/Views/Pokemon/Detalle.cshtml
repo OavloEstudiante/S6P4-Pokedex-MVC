@@ -1,0 +1,80 @@
+﻿@model S6P4.Models.PokemonDetalleViewModel
+@using S6P4.Models
+@{
+    Layout = "~/Views/Shared/_LayoutPokemon.cshtml";
+    var p = Model.Pokemon;
+    ViewBag.Title = p != null ? p.NombreVisible : "No encontrado";
+}
+
+@if (p == null)
+{
+    <section class="panel">
+        <a class="btn" href="@Url.Action("Index", "Pokemon")">◀ Volver</a>
+        <div class="rejilla-altavoz" aria-hidden="true"></div>
+    </section>
+    <div class="bisagra" aria-hidden="true"></div>
+    <section class="panel">
+        <div class="alerta error">⚠ @(Model.Error ?? "Pokémon no encontrado.")</div>
+    </section>
+}
+else
+{
+    <section class="panel">
+        <div class="pantalla retrato @("tipo-" + p.TipoPrincipal)">
+            <span class="numero">@p.NumeroFormateado</span>
+            <img src="@p.ImagenUrl" alt="@p.NombreVisible" />
+        </div>
+
+        <div class="tipos">
+            @foreach (var t in p.Types.OrderBy(x => x.Slot))
+            {
+                <span class="badge @("tipo-" + t.Type.Name)">@PokemonHelper.TipoEs(t.Type.Name)</span>
+            }
+        </div>
+
+        <div class="mandos">
+            <div class="dial" aria-hidden="true"></div>
+            <a class="btn" href="@Url.Action("Index", "Pokemon")">◀ Volver</a>
+        </div>
+        <div class="rejilla-altavoz" aria-hidden="true"></div>
+    </section>
+
+    <div class="bisagra" aria-hidden="true"></div>
+
+    <section class="panel">
+        <div class="pantalla clara detalle-der @("tipo-" + p.TipoPrincipal)">
+            <h1>@p.NombreVisible</h1>
+
+            @if (!string.IsNullOrEmpty(Model.Descripcion))
+            {
+                <p class="descripcion">“@Model.Descripcion”</p>
+            }
+
+            <div class="datos">
+                <div class="dato"><b>@p.AlturaMetros.ToString("0.0") m</b><span>Altura</span></div>
+                <div class="dato"><b>@p.PesoKg.ToString("0.0") kg</b><span>Peso</span></div>
+                <div class="dato"><b>@(p.BaseExperience.HasValue ? p.BaseExperience.Value.ToString() : "—")</b><span>Exp. base</span></div>
+            </div>
+
+            <h3 class="subtitulo">ESTADÍSTICAS</h3>
+            @foreach (var s in p.Stats)
+            {
+                <div class="stat">
+                    <span>@PokemonHelper.StatEs(s.Stat.Name)</span>
+                    <span>@s.BaseStat</span>
+                    <div class="barra"><i style="--w:@(PokemonHelper.PorcentajeStat(s.BaseStat))%"></i></div>
+                </div>
+            }
+
+            <h3 class="subtitulo">HABILIDADES</h3>
+            <div class="habilidades">
+                @foreach (var a in p.Abilities)
+                {
+                    <span class="habilidad @(a.IsHidden ? "oculta" : "")">
+                        @a.Ability.Name.Replace("-", " ")@(a.IsHidden ? " (oculta)" : "")
+                    </span>
+                }
+            </div>
+        </div>
+    </section>
+}

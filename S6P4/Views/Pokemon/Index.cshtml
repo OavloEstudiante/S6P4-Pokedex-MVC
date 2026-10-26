@@ -1,0 +1,73 @@
+﻿@model S6P4.Models.PokemonListaViewModel
+@using S6P4.Models
+@{
+    ViewBag.Title = "Pokédex";
+    Layout = "~/Views/Shared/_LayoutPokemon.cshtml";
+    int delay = 0;
+}
+
+<section class="panel">
+    <div class="pantalla">
+        <p class="etiqueta">BUSCADOR</p>
+        <form class="buscador" action="@Url.Action("Buscar", "Pokemon")" method="get">
+            <input type="text" name="q" placeholder="Nombre o número (ej. pikachu, 25)"
+                   aria-label="Buscar Pokémon" autocomplete="off" />
+            <button type="submit" class="btn azul">Buscar</button>
+        </form>
+    </div>
+
+    @if (Model.TotalPaginas > 1)
+    {
+        <nav class="pantalla paginacion" aria-label="Paginación">
+            <p class="etiqueta">PÁGINA</p>
+            <span class="estado">@Model.Pagina / @Model.TotalPaginas</span>
+            <a class="btn @(Model.Pagina <= 1 ? "gris" : "")"
+               href="@Url.Action("Index", "Pokemon", new { pagina = Model.Pagina - 1 })">◀ Anterior</a>
+            <a class="btn @(Model.Pagina >= Model.TotalPaginas ? "gris" : "")"
+               href="@Url.Action("Index", "Pokemon", new { pagina = Model.Pagina + 1 })">Siguiente ▶</a>
+        </nav>
+    }
+
+    <div class="mandos" aria-hidden="true">
+        <div class="dial"></div>
+        <div class="pulsadores"><i></i><i></i><i></i><i></i></div>
+    </div>
+    <div class="rejilla-altavoz" aria-hidden="true"></div>
+</section>
+
+<div class="bisagra" aria-hidden="true"></div>
+
+<section class="panel">
+    <div class="pantalla">
+        <p class="etiqueta">LISTA DE POKÉMON</p>
+
+        @if (!string.IsNullOrEmpty(Model.Error))
+        {
+            <div class="alerta error">⚠ @Model.Error</div>
+        }
+
+        <div class="grid">
+            @foreach (var p in Model.Pokemones)
+            {
+                <a class="card @("tipo-" + p.TipoPrincipal)"
+                   href="@Url.Action("Detalle", "Pokemon", new { id = p.Id })"
+                   style="animation-delay:@(delay)ms">
+                    <div class="arte">
+                        <span class="num">@p.NumeroFormateado</span>
+                        <img src="@p.ImagenUrl" alt="@p.NombreVisible" loading="lazy" />
+                    </div>
+                    <div class="info">
+                        <h2 class="nombre">@p.NombreVisible</h2>
+                        <div class="tipos">
+                            @foreach (var t in p.Types.OrderBy(x => x.Slot))
+                            {
+                                <span class="badge @("tipo-" + t.Type.Name)">@PokemonHelper.TipoEs(t.Type.Name)</span>
+                            }
+                        </div>
+                    </div>
+                </a>
+                delay += 40;
+            }
+        </div>
+    </div>
+</section>
